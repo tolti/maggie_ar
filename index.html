@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Maggie AR</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+      /* small hint shown until the marker is found */
+      #hint {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 24px;
+        text-align: center;
+        color: #fff;
+        font-family: -apple-system, sans-serif;
+        font-size: 15px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+        z-index: 5;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="hint">매기 마커를 비춰 주세요 📸</div>
+
+    <a-scene
+      mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; filterMinCF: 0.0005; filterBeta: 0.01; missTolerance: 8; warmupTolerance: 3"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets>
+        <img id="maggie" src="./maggie.png" />
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- target 0 = our marker; children are anchored to it -->
+      <a-entity id="target" mindar-image-target="targetIndex: 0">
+        <!-- soft ground shadow on the marker -->
+        <a-circle
+          radius="0.28"
+          position="0 -0.02 0.001"
+          material="color: #000; opacity: 0.18; transparent: true"
+        ></a-circle>
+
+        <!-- Maggie billboard: appears on the marker, facing the camera -->
+        <a-plane
+          id="maggiePlane"
+          src="#maggie"
+          position="0 0.28 0.02"
+          width="0.62"
+          height="0.804"
+          material="shader: flat; transparent: true; alphaTest: 0.5; side: double"
+        ></a-plane>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      const sceneEl = document.querySelector('a-scene')
+      const target = document.querySelector('#target')
+      const hint = document.querySelector('#hint')
+      target.addEventListener('targetFound', () => {
+        hint.style.opacity = '0'
+      })
+      target.addEventListener('targetLost', () => {
+        hint.style.opacity = '1'
+        hint.textContent = '마커를 다시 비추면 매기가 돌아와요 🐦'
+      })
+    </script>
+  </body>
+</html>
