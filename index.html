@@ -14,6 +14,22 @@
         overflow: hidden;
         background: #000;
       }
+      /* let the camera video show through the 3D canvas */
+      a-scene,
+      .a-canvas,
+      canvas.a-canvas {
+        background: transparent !important;
+      }
+      /* MindAR camera feed */
+      video {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover;
+        z-index: -2;
+      }
       /* small hint shown until the marker is found */
       #hint {
         position: fixed;
@@ -36,8 +52,8 @@
 
     <a-scene
       mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; filterMinCF: 0.0005; filterBeta: 0.01; missTolerance: 8; warmupTolerance: 3"
-      color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
+      renderer="colorManagement: true; alpha: true"
+      background="transparent: true"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
