@@ -12,23 +12,19 @@
         margin: 0;
         height: 100%;
         overflow: hidden;
-        background: #000;
+        background: transparent;
       }
-      /* let the camera video show through the 3D canvas */
+      /* keep the 3D canvas transparent so the camera video shows behind it */
       a-scene,
       .a-canvas,
       canvas.a-canvas {
         background: transparent !important;
       }
-      /* MindAR camera feed */
+      /* MindAR camera feed fills the screen (do NOT push it behind the page) */
       video {
-        position: absolute !important;
-        top: 0;
-        left: 0;
+        object-fit: cover !important;
         width: 100% !important;
         height: 100% !important;
-        object-fit: cover;
-        z-index: -2;
       }
       /* small hint shown until the marker is found */
       #hint {
